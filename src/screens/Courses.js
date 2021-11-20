@@ -1,15 +1,26 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
-
-const listData = [
-    {key: 0, name: 'Khóa học 1', brief: 'Đây là khóa học 1'},
-    {key: 1, name: 'Khóa học 2', brief: 'Đây là khóa học 2'},
-    {key: 2, name: 'Khóa học 3', brief: 'Đây là khóa học 3'},
-];
+import initDataCourse from "../api/initDataCourses";
+import getToken from "../api/getToken";
 
 class Courses extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { listData: [] };
+    }
+    componentDidMount() {
+        getToken()
+        .then(token => initDataCourse(token))
+        .then(listData => this.setState({ listData }))
+        .catch(err => this.gotoLogin());
+    }
+
+    gotoLogin() {
+        this.props.navigation.navigate("Login");
+    }
     render() {
+        const { listData } = this.state;
         return(
             <View style={ styles.container }>
                 <ScrollView>
@@ -18,9 +29,10 @@ class Courses extends Component {
                             <TouchableOpacity
                                 style={ styles.rect2 }
                                 // onPress
+                                key={item.id}
                             >
-                                <Text style={ styles.textButton }> {item.name} </Text>
-                                <Text style={ styles.textButton }> {item.brief} </Text>
+                                <Text style={ styles.textButton }> {item.code} </Text>
+                                <Text style={ styles.textButton }> {item.started_at} </Text>
                             </TouchableOpacity>
                         );
                     }) }
