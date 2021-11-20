@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import {
-    StyleSheet, Text, View
+    StyleSheet, Text, View, Alert
 } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
 import { DEVICE_WIDTH, MARGIN_VIEW, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
+import register from "../api/register";
+import saveToken from "../api/saveToken";
 
 class Register extends Component {
     constructor(props) {
@@ -14,6 +16,60 @@ class Register extends Component {
             password: '',
             rePassword: ''
         };
+    }
+
+    gotoMain() {
+        this.props.navigation.navigate("Home")
+    }
+
+    goBack() {
+        this.props.navigation.pop()
+    }
+
+    onSuccess() {
+        Alert.alert(
+            'Thông báo',
+            'Đăng ký thành công',
+            [
+                { text: 'OK' }
+            ],
+            { cancelable: false }
+        );
+    }
+    
+    onFail() {
+        Alert.alert(
+            'Thông báo',
+            'Đăng ký thất bại',
+            [
+                { text: 'OK' }
+            ],
+            { cancelable: false }
+        );
+    }
+
+    onSignUp() {
+        const { email, password, rePassword } = this.state;
+        if (password !== rePassword) {
+            this.onFail();
+        } else {
+            register(email, password)
+                .then(res => {
+                    if(res.user) {
+                        global.onSignIn = res.user;
+                        saveToken(res.access_token);
+                        this.onSuccess();
+                        this.gotoMain();
+                    } else {
+                        console.log(res)
+                        this.onFail();
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.onFail();
+                });
+        }
     }
 
     render() {
@@ -52,7 +108,7 @@ class Register extends Component {
                 </View>
 
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}
+                    onPress={this.onSignUp.bind(this)}
                     style={ styles.button }
                 >
                     <Text style={ styles.textButton }>CONFIRM</Text>

@@ -4,10 +4,26 @@ import { DEVICE_HEIGHT, DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../const
 
 import Login from './Login';
 import ProfileDetails from './ProfileDetails';
+import global from "../global";
+import saveToken from "../api/saveToken";
 
 class Profile extends Component {
     constructor( props ) {
         super(props);
+    }
+
+    logout() {
+        global.onSignIn = null;
+        saveToken('');
+        this.props.navigation.navigate("Login");
+    }
+
+    gotoLink(item) {
+        this.props.navigation.navigate(item.toGo);
+    }
+
+    factory(item) {
+        item.id == 1 ? this.logout() : this.gotoLink(item)
     }
 
     render() {
@@ -33,7 +49,7 @@ class Profile extends Component {
                     renderItem={({ item }) =>
                         <TouchableOpacity
                             style = { styles.rect }
-                            onPress = {() => nav.navigate(item.toGo)}
+                            onPress = {() => this.factory(item)}
                         >
                             <Text style = { styles.textButton }>{ item.key }</Text>
                         </TouchableOpacity>
