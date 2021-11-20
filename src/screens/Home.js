@@ -9,7 +9,16 @@ const Tab = createMaterialBottomTabNavigator();
 function Home() {
     return (
         <Tab.Navigator initialRouteName="Course">
-            <Tab.Screen name="Courses" component={ Courses } />
+            <Tab.Screen
+                name="Courses"
+                component={ Courses }
+                options={
+                    {
+                        // tabBarIcon: () => {
+                            
+                        // }
+                    }
+                }/>
             <Tab.Screen name="Profile" component={ Profile } />
         </Tab.Navigator>
     );
