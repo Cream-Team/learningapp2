@@ -1,25 +1,26 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
-import Courses from './Courses';
+import ListCourses from './ListCourses';
 import Profile from './Profile';
 
 const Tab = createMaterialBottomTabNavigator();
 
 function Home() {
     return (
-        <Tab.Navigator initialRouteName="Course">
+        <Tab.Navigator initialRouteName="ListCourse">
             <Tab.Screen
-                name="Courses"
-                component={ Courses }
+                name="Danh sách khóa học"
+                component={ ListCourses }
                 options={
                     {
                         // tabBarIcon: () => {
                             
                         // }
                     }
-                }/>
-            <Tab.Screen name="Profile" component={ Profile } />
+                }
+            />
+            <Tab.Screen name="Thông tin cá nhân" component={ Profile } />
         </Tab.Navigator>
     );
 }

@@ -4,7 +4,7 @@ import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
 import initDataCourse from "../api/initDataCourses";
 import getToken from "../api/getToken";
 
-class Courses extends Component {
+class ListCourses extends Component {
     constructor(props) {
         super(props);
         this.state = { listData: [] };
@@ -16,8 +16,8 @@ class Courses extends Component {
         .catch(err => this.gotoLogin());
     }
 
-    gotoLogin() {
-        this.props.navigation.navigate("Login");
+    gotoCourse() {
+        this.props.navigation.navigate("Course");
     }
     render() {
         const { listData } = this.state;
@@ -28,7 +28,7 @@ class Courses extends Component {
                         return (
                             <TouchableOpacity
                                 style={ styles.rect2 }
-                                // onPress
+                                onPress={this.gotoCourse.bind(this)}
                                 key={item.id}
                             >
                                 <Text style={ styles.textButton }> {item.code} </Text>
@@ -42,7 +42,7 @@ class Courses extends Component {
     }
 }
 
-export default Courses;
+export default ListCourses;
 
 const styles = StyleSheet.create({
     container: {
