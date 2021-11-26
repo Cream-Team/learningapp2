@@ -2,10 +2,17 @@ import React, { Component } from "react";
 import {
     StyleSheet,
     Text,
-    View
+    View,
+    Alert
 } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { DEVICE_WIDTH, MARGIN_VIEW, PADDING_CONTENT, TEXTSIZE } from '../constant/Constant';
+import global from '../global';
+import signIn from '../api/signIn';
+import saveToken from '../api/saveToken';
+import getToken from '../api/getToken';
+import initData from "../api/initDataCourses";
+import getUserLogged from "../api/getUserLogged";
 
 class Login extends Component {
     constructor(props) {
@@ -14,6 +21,70 @@ class Login extends Component {
             email: '',
             password: ''
         };
+    }
+
+    componentDidMount() {
+        getToken()
+        .then(token => getUserLogged(token))
+        .then(res => this.redirectToMain(res))
+        .catch(err => console.log(err));
+    }
+
+    redirectToMain(res) {
+        if(res.email) {
+            global.onSignIn = res;
+            this.props.navigation.navigate("Home")
+        }
+    }
+
+    gotoMain() {
+        this.props.navigation.navigate("Home")
+    }
+
+    gotoRegister() {
+        this.props.navigation.navigate("Register")
+    }
+
+    onSuccess() {
+        Alert.alert(
+            'Thông báo',
+            'Đăng nhập thành công',
+            [
+                { text: 'OK' }
+            ],
+            { cancelable: false }
+        );
+      }
+    
+    onFail() {
+        Alert.alert('Alert Title', 'My Alert Msg', [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ]);
+    }
+
+    onSignIn() {
+        const { email, password } = this.state;
+        signIn(email, password)
+          .then(res => {
+            if(res.user) {
+              global.onSignIn = res.user;
+              saveToken(res.access_token);
+              this.onSuccess();
+              this.gotoMain();
+            } else {
+              console.log(res)
+              this.onFail();
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            this.onFail();
+          });
     }
 
     render() {
@@ -41,14 +112,14 @@ class Login extends Component {
                 </View>
 
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("Home")}
+                    onPress={this.onSignIn.bind(this)}
                     style={ styles.button }
                 >
                     <Text style={ styles.textButton }>LOGIN</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("Register")}
+                    onPress={this.gotoRegister.bind(this)}
                     style={ styles.button }
                 >
                     <Text style={ styles.textButton }>REGISTER</Text>

@@ -1,15 +1,26 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
+import initDataCourse from "../api/initDataCourses";
+import getToken from "../api/getToken";
 
-const listData = [
-    {key: 0, name: 'Khóa học 1', brief: 'Đây là khóa học 1'},
-    {key: 1, name: 'Khóa học 2', brief: 'Đây là khóa học 2'},
-    {key: 2, name: 'Khóa học 3', brief: 'Đây là khóa học 3'},
-];
+class ListCourses extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { listData: [] };
+    }
+    componentDidMount() {
+        getToken()
+        .then(token => initDataCourse(token))
+        .then(listData => this.setState({ listData }))
+        .catch(err => this.gotoLogin());
+    }
 
-class Courses extends Component {
+    gotoCourse() {
+        this.props.navigation.navigate("Course");
+    }
     render() {
+        const { listData } = this.state;
         return(
             <View style={ styles.container }>
                 <ScrollView>
@@ -17,10 +28,11 @@ class Courses extends Component {
                         return (
                             <TouchableOpacity
                                 style={ styles.rect2 }
-                                // onPress
+                                onPress={this.gotoCourse.bind(this)}
+                                key={item.id}
                             >
-                                <Text style={ styles.textButton }> {item.name} </Text>
-                                <Text style={ styles.textButton }> {item.brief} </Text>
+                                <Text style={ styles.textButton }> {item.code} </Text>
+                                <Text style={ styles.textButton }> {item.started_at} </Text>
                             </TouchableOpacity>
                         );
                     }) }
@@ -30,7 +42,7 @@ class Courses extends Component {
     }
 }
 
-export default Courses;
+export default ListCourses;
 
 const styles = StyleSheet.create({
     container: {
