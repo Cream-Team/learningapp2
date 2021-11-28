@@ -3,8 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Animated, Image, ScrollView }
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from 'react-native-underline-tabbar';
 import RadioButtonRN from 'radio-buttons-react-native';
-import Video from 'react-native-video';
-import Swiper from 'react-native-swiper';
+import { Video } from 'expo-av';
+
+import getToken from '../api/getToken';
+import initDataDetailLecture from '../api/initDataDetailLecture';
+import global from '../global';
 
 var hobbies = [
     {label: "2", value: 0},
@@ -12,20 +15,20 @@ var hobbies = [
     {label: "Hai", value: 2},
 ];
 
-const datas = [
-    {
-        des: 'Mục tiêu bài học\n\n1. Mục tiêu bài học:\n\nTrong bài học này chúng ta sẽ tìm hiểu về hai loại giới hạn đặc biệt 0/0 hoặc  và quy tắc L’Hospital để tính hai loại giới hạn đó.\n\nNgoài ra sinh viên sẽ xem thêm nội dung tại đây\n\n2. Những điểm lưu ý về bài học: N/A\n\n3. Thời gian cần thiết để học bài này: 189 phút',
-        til: 'Đây Là Lý Thuyết',
-      },
-      {
-        vide: "https://www.w3schools.com/html/mov_bbb.mp4",
-        til: 'Đây Là Video',
-      },
-      {
-          til: 'Đây Là Bài tập',
-          ques: 'Một cộng một bằng?',
-      }
-    ]
+// const datas = [
+//     {
+//         des: 'Mục tiêu bài học\n\n1. Mục tiêu bài học:\n\nTrong bài học này chúng ta sẽ tìm hiểu về hai loại giới hạn đặc biệt 0/0 hoặc  và quy tắc L’Hospital để tính hai loại giới hạn đó.\n\nNgoài ra sinh viên sẽ xem thêm nội dung tại đây\n\n2. Những điểm lưu ý về bài học: N/A\n\n3. Thời gian cần thiết để học bài này: 189 phút',
+//         til: 'Đây Là Lý Thuyết',
+//     },
+//     {
+//         vide: "https://www.w3schools.com/html/mov_bbb.mp4",
+//         til: 'Đây Là Video',
+//     },
+//     {
+//         til: 'Đây Là Bài tập',
+//         ques: 'Một cộng một bằng?',
+//     }
+// ]
 
 const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) => {
   const { label } = tab;
@@ -63,13 +66,28 @@ const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) =>
   );
 };
 
-class DetailCourse extends Component {
+class Lecture extends Component {
     constructor(props) {
-        super();
+        super(props);
+        this.state = { listData: [] };
     }
+
+    componentDidMount() {
+        const id = this.props.route.params;
+        const user_id = global.onSignIn.id;
+
+        // console.log(this.props);
+
+        getToken()
+        .then(token => initDataDetailLecture(token, user_id, id))
+        .then(listData => this.setState({ listData }))
+        .catch(err => this.gotoLogin());
+    }
+
     goBack = () => {
         this.props.navigation.pop();
     }
+
     _scrollX = new Animated.Value(0);
     // 6 is a quantity of tabs
     interpolators = Array.from({ length: 6 }, (_, i) => i).map(idx => ({
@@ -93,59 +111,64 @@ class DetailCourse extends Component {
         extrapolate: 'clamp',
         }),
     }));
+
     render() {
+        const { listData } = this.state;
+        // console.log(listData);
+
         const PageLyThuyet = ({e}) => (
             <ScrollView style={styles.container}>
-                <Text style = {formatText}> {e.til} </Text>
-                <Text style = {formatText}>{e.des}</Text>
+                <Text style = {formatText}> {e.name} </Text>
+                {/* <Text style = {formatText}>{e.des}</Text> */}
             </ScrollView>
           );
           
-          const PageVideo = ({e}) => (
-              <ScrollView style={styles.container}>
-               <Text style = {formatText}> {e.til} </Text>
+        const PageVideo = ({e}) => (
+            <ScrollView style={styles.container}>
+                <Text style = {formatText}> {e.name} </Text>
                 <Video
-                    source={{uri: e.vide}}
-                    ref={(ref) => {
-                        this.player = ref
-                    }}  
-                    paused={true}
-                    controls={true}                                   
-                    onBuffer={this.onBuffer}                
-                    onError={this.videoError} 
+                    // ref={null}
+                    source={{uri: e.meta.url}}
+                    useNativeControls
+                    resizeMode='contain'
                     style={video}
                 />
-              </ScrollView>
-          );
-          
-          const PageBaiTap = ({e}) => (
-              <ScrollView style={styles.container}>
-                <Text style = {formatText}> {e.til} </Text>
-                <Text style = {formatText}> {e.ques} </Text>
-                <RadioButtonRN
-					data={hobbies}
-					initial={1}
-                    circleSize={16}
-                    style={radioBtn}
-				/>
-                <TouchableOpacity style={btnMark}>
-                    <Text style = {{color: '#fff'}}>Gửi</Text>
-                </TouchableOpacity>
-              </ScrollView>
-          );
+                
+            </ScrollView>
+        );
+        const PageBaiTap = ({e}) => (
+            <ScrollView style={styles.container}>
+            <Text style = {formatText}> {e.name} </Text>
+            <Text style = {formatText}> {e.meta.question} </Text>
+            <RadioButtonRN
+                // data={e.meta.answers}
+                data={hobbies}
+                initial={1}
+                circleSize={16}
+                style={radioBtn}
+            />
+            <TouchableOpacity style={btnMark}>
+                <Text style = {{color: '#fff'}}>Gửi</Text>
+            </TouchableOpacity>
+            </ScrollView>
+        );
         const {
             container, row1, titleStyle, iconStyle, video,
             wrapper, formatText, btnMark, radioBtn, 
         } = styles;
+
+        
+
         return (
         <View style={ container }>
-            <View style={row1}>
+            {/* <View style={row1}>
                 <TouchableOpacity onPress={this.goBack.bind(this)}>
                     <Image source={icBack} style={iconStyle} />
                 </TouchableOpacity>
                 <Text style={titleStyle}>Giới thiệu chung</Text>
                 <Image source={icLogo} style={iconStyle} />
-            </View>
+            </View> */}
+
             <ScrollableTabView
             renderTabBar={() => (
                 <TabBar
@@ -166,19 +189,40 @@ class DetailCourse extends Component {
             )}
             onScroll={(x) => this._scrollX.setValue(x)}
             >
-            {datas.map( e => (
+            {/* {datas.map( e => (
                 (typeof e.des !== "undefined") ? <PageLyThuyet tabLabel={{label: e.til}} e = {e}/>
                     : (typeof e.vide !== "undefined") ? <PageVideo tabLabel={{label: e.til}} e = {e}/>
                     : <PageBaiTap tabLabel={{label: e.til}} e = {e}/>
                 
-            ))}
+            ))} */}
+
+            {
+                listData.map(data => {
+                    
+                    if(data.document_types.name === "Lý thuyết") {
+                        return (
+                            <PageLyThuyet tabLabel={{label: data.name}} e={data} />
+                        );
+                    }
+                    if(data.document_types.name === "Bài tập") {
+                        return (
+                            <PageBaiTap tabLabel={{label: data.name}} e={data} />
+                        );
+                    }
+                    if(data.document_types.name === "Video") {
+                        return (
+                            <PageVideo tabLabel={{label: data.name}} e={data}/>
+                        );
+                    }
+                })
+            }
             </ScrollableTabView>
         </View>
     );
   }
 }
 
-export default DetailCourse;
+export default Lecture;
 
 const styles = StyleSheet.create({
     welcome: {
@@ -268,17 +312,9 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     video: {
-        borderColor: 'black',
-        borderWidth: 3,
-        marginLeft: 35,
-        marginTop: 50,
-        height: 180,
-        width: 300,
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
+        alignSelf: 'center',
+        width: 320,
+        height: 200,
     },
     radioBtn: {
         width: 300,

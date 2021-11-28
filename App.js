@@ -9,6 +9,7 @@ import Register from './src/screens/Register';
 import Home from './src/screens/Home';
 import ProfileDetails from './src/screens/ProfileDetails';
 import Course from './src/screens/Course';
+import Lecture from './src/screens/Lecture';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Home" component={ Home } />
         <Stack.Screen name="ProfileDetails" component= {ProfileDetails} />
         <Stack.Screen name="Course" component={Course} />
+        <Stack.Screen name="Lecture" component={Lecture} />
       </Stack.Navigator>
     </NavigationContainer>
   );

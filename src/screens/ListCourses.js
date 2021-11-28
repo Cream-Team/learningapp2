@@ -9,18 +9,26 @@ class ListCourses extends Component {
         super(props);
         this.state = { listData: [] };
     }
+
     componentDidMount() {
         getToken()
         .then(token => initDataCourse(token))
         .then(listData => this.setState({ listData }))
         .catch(err => this.gotoLogin());
     }
-
-    gotoCourse() {
-        this.props.navigation.navigate("Course");
+    
+    gotoCourse(id) {
+        this.props.navigation.navigate("Course", id);
     }
+
+    gotoLogin() {
+        this.props.navigation.navigate("Login");
+    }
+
     render() {
         const { listData } = this.state;
+        // console.log(listData);
+
         return(
             <View style={ styles.container }>
                 <ScrollView>
@@ -28,11 +36,12 @@ class ListCourses extends Component {
                         return (
                             <TouchableOpacity
                                 style={ styles.rect2 }
-                                onPress={this.gotoCourse.bind(this)}
+                                onPress={() => this.gotoCourse(item.id)}
                                 key={item.id}
                             >
                                 <Text style={ styles.textButton }> {item.code} </Text>
                                 <Text style={ styles.textButton }> {item.started_at} </Text>
+                                <Image style={ styles.productImage } source={{uri:item.thumbnail}}></Image>
                             </TouchableOpacity>
                         );
                     }) }
@@ -64,5 +73,11 @@ const styles = StyleSheet.create({
     textButton: {
         color: "#000",
         fontSize: TEXTSIZE
+    },
+    productImage: {
+        margin: 5,
+        borderRadius: 10,
+        width: 90,
+        height: (90 * 450) / 400
     },
 });

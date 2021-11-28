@@ -3,83 +3,85 @@ import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView, View } from 'react-native';
 
 import DropDownItem from "react-native-drop-down-item";
-
+import initDataDetailCourse from '../api/initDataDetailCourse';
+import getToken from '../api/getToken';
 
 class Course extends Component {
     constructor(props) {
-        super();
+        super(props);
+        this.state = { listData: [] };
     }
+
+    componentDidMount() {
+        const id = this.props.route.params;
+
+        // console.log(id);
+
+        getToken()
+        .then(token => initDataDetailCourse(token, id))
+        .then(listData => this.setState({ listData }))
+        .catch(err => this.gotoLogin());
+    }
+
     goBack = () => {
         this.props.navigation.pop();
     }
-    gotoCourseDetail() {
-        this.props.navigation.navigate('DetCourse');
-      }
-  render() {
-    const {
-      container, txtTitle, row1, txtName, descript,contai, titleStyle, hr
-    } = styles;
-    return (
-        <View style={ container }>
-            <View style={row1}>
-                <Text style={titleStyle}>Khoá học React Native</Text>
+
+    gotoLecture(id) {
+        // console.log(id);
+        this.props.navigation.navigate('Lecture', id);
+    }
+
+    gotoLogin() {
+        this.props.navigation.navigate("Login");
+    }
+
+    render() {
+        const { listData } = this.state;
+
+        const {
+            container, txtTitle, row1, txtName, descript,contai, titleStyle, hr
+        } = styles;
+
+        return (
+            <View style={ container }>
+                {/* <View style={row1}>
+                    <Text style={titleStyle}>Khoá học React Native</Text>
+                </View> */}
+
+                <View style={hr}></View>
+
+                <ScrollView style={ descript }>
+                    { listData.map((item) => {
+                        return (
+                            <DropDownItem
+                                key={item.id}
+                                header={
+                                <View style={ contai }>
+                                    <Text style = {txtTitle}>★ {item.name}</Text>
+                                </View>
+                                }
+                            >
+                                {
+                                    item.lectures.map((lecture) => {
+                                        return  (
+                                            <TouchableOpacity>
+                                                <Text
+                                                    style = {txtName}
+                                                    onPress = {() => this.gotoLecture(lecture.id)}
+                                                >● { lecture.name }</Text>
+                                            </TouchableOpacity>
+                                        );
+                                    })
+                                }
+                                
+                                
+                            </DropDownItem>
+                        );
+                    }) }
+                </ScrollView>
             </View>
-            <View style={hr}></View>
-          <ScrollView style={ descript }>
-            <DropDownItem
-                //key={1}
-                header={
-                <View style={ contai }>
-                    <Text style = {txtTitle}>★ Mở Đầu</Text>
-                </View>
-                }
-            >
-                <TouchableOpacity>
-                    <Text
-                        style = {txtName}
-                        // onPress = {}
-                    >● Giới thiệu chung</Text>
-                </TouchableOpacity>
-                <Text style = {txtName}>● Giới thiệu môn học</Text>
-                <Text style = {txtName}>● Đánh giá</Text>
-            </DropDownItem>
-            <DropDownItem
-                //key={1}
-                header={
-                <View style={ contai }>
-                    <Text style = {txtTitle}>★ Chương 1</Text>
-                </View>
-                }
-            >
-                <Text style = {txtName}>● Bài 1</Text>
-                <Text style = {txtName}>● Bài 2</Text>
-                <Text style = {txtName}>● Bài 3</Text>
-            </DropDownItem>
-            <DropDownItem
-                //key={1}
-                header={
-                <View style={ contai }>
-                    <Text style = {txtTitle}>★ Chương 2</Text>
-                </View>
-                }
-            >
-                <Text style = {txtName}>● Bài 1</Text>
-                <Text style = {txtName}>● Bài 2</Text>
-                <Text style = {txtName}>● Bài 3</Text>
-            </DropDownItem>
-            <DropDownItem
-                //key={1}
-                header={
-                <View style={ contai }>
-                    <Text style = {txtTitle}>★ Kết thúc khoá học</Text>
-                </View>
-                }
-            >
-                <Text style = {txtName}>● Chúc mừng hoàn thành khoá học</Text>
-            </DropDownItem>
-          </ScrollView>
-        </View>
-      );
+        );
   }
 }
 
