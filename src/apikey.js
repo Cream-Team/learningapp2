@@ -1,0 +1,2 @@
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyODUxMDIzMCwiZXhwIjoxOTQ0MDg2MjMwfQ.VPcF-9_havlu7L2pnl6gLSh2GP0V0cbkgLcjPkaJgEc'
+export default SUPABASE_KEY

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+    StyleSheet, Text, View, Alert
+} from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import {
   responsiveWidth,
@@ -15,16 +17,6 @@ import {
 
 import { Registerhead } from "../components/Registerhead";
 import { LinearGradient } from "expo-linear-gradient";
-
-class Register extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      rePassword: "",
-    };
-  }
 
   render() {
     const { email, password, rePassword } = this.state;
@@ -87,6 +79,73 @@ class Register extends Component {
       </View>
     );
   }
+import register from "../api/register";
+import saveToken from "../api/saveToken";
+
+class Register extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+            rePassword: ''
+        };
+    }
+
+    gotoMain() {
+        this.props.navigation.navigate("Home")
+    }
+
+    goBack() {
+        this.props.navigation.pop()
+    }
+
+    onSuccess() {
+        Alert.alert(
+            'Thông báo',
+            'Đăng ký thành công',
+            [
+                { text: 'OK' }
+            ],
+            { cancelable: false }
+        );
+    }
+    
+    onFail() {
+        Alert.alert(
+            'Thông báo',
+            'Đăng ký thất bại',
+            [
+                { text: 'OK' }
+            ],
+            { cancelable: false }
+        );
+    }
+
+    onSignUp() {
+        const { email, password, rePassword } = this.state;
+        if (password !== rePassword) {
+            this.onFail();
+        } else {
+            register(email, password)
+                .then(res => {
+                    if(res.user) {
+                        global.onSignIn = res.user;
+                        saveToken(res.access_token);
+                        this.onSuccess();
+                        this.gotoMain();
+                    } else {
+                        console.log(res)
+                        this.onFail();
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.onFail();
+                });
+        }
+    }
+
 }
 
 export default Register;
