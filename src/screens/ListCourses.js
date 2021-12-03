@@ -4,23 +4,31 @@ import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
 import initDataCourse from "../api/initDataCourses";
 import getToken from "../api/getToken";
 
-class Courses extends Component {
+class ListCourses extends Component {
     constructor(props) {
         super(props);
         this.state = { listData: [] };
     }
+
     componentDidMount() {
         getToken()
         .then(token => initDataCourse(token))
         .then(listData => this.setState({ listData }))
         .catch(err => this.gotoLogin());
     }
+    
+    gotoCourse(id) {
+        this.props.navigation.navigate("Course", id);
+    }
 
     gotoLogin() {
         this.props.navigation.navigate("Login");
     }
+
     render() {
         const { listData } = this.state;
+        // console.log(listData);
+
         return(
             <View style={ styles.container }>
                 <ScrollView>
@@ -28,11 +36,12 @@ class Courses extends Component {
                         return (
                             <TouchableOpacity
                                 style={ styles.rect2 }
-                                // onPress
+                                onPress={() => this.gotoCourse(item.id)}
                                 key={item.id}
                             >
                                 <Text style={ styles.textButton }> {item.code} </Text>
                                 <Text style={ styles.textButton }> {item.started_at} </Text>
+                                <Image style={ styles.productImage } source={{uri:item.thumbnail}}></Image>
                             </TouchableOpacity>
                         );
                     }) }
@@ -42,7 +51,7 @@ class Courses extends Component {
     }
 }
 
-export default Courses;
+export default ListCourses;
 
 const styles = StyleSheet.create({
     container: {
@@ -64,5 +73,11 @@ const styles = StyleSheet.create({
     textButton: {
         color: "#000",
         fontSize: TEXTSIZE
+    },
+    productImage: {
+        margin: 5,
+        borderRadius: 10,
+        width: 90,
+        height: (90 * 450) / 400
     },
 });
