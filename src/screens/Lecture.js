@@ -8,6 +8,7 @@ import { Video } from 'expo-av';
 import getToken from '../api/getToken';
 import initDataDetailLecture from '../api/initDataDetailLecture';
 import global from '../global';
+import submitExercise from '../api/submitExercise';
 
 var hobbies = [
     {label: "2", value: 0},
@@ -84,6 +85,32 @@ class Lecture extends Component {
         .catch(err => this.gotoLogin());
     }
 
+    compareAnswer(e) {
+        // console.log(e);
+
+        const user_id = global.onSignIn.id;
+        const document_id = e.id;
+
+        /*
+        const answer = e.correct
+        const user_answer = (get from RadioButton)
+        
+        const is_correct = answer === user_answer;
+
+        const data = {
+            user_id: user_id,
+            document_id: e.id,
+            answer: user_answer,
+            is_correct: is_correct,
+        };
+
+        getToken()
+        .then(token => submitExercise(token, data))
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+        */
+    }
+
     goBack = () => {
         this.props.navigation.pop();
     }
@@ -119,7 +146,7 @@ class Lecture extends Component {
         const PageLyThuyet = ({e}) => (
             <ScrollView style={styles.container}>
                 <Text style = {formatText}> {e.name} </Text>
-                {/* <Text style = {formatText}>{e.des}</Text> */}
+                <Text style = {formatText}>{e.meta.description}</Text>
             </ScrollView>
           );
           
@@ -133,7 +160,6 @@ class Lecture extends Component {
                     resizeMode='contain'
                     style={video}
                 />
-                
             </ScrollView>
         );
         const PageBaiTap = ({e}) => (
@@ -147,7 +173,10 @@ class Lecture extends Component {
                 circleSize={16}
                 style={radioBtn}
             />
-            <TouchableOpacity style={btnMark}>
+            <TouchableOpacity
+                style={btnMark}
+                onPress={this.compareAnswer(e)}
+            >
                 <Text style = {{color: '#fff'}}>Gửi</Text>
             </TouchableOpacity>
             </ScrollView>
@@ -161,45 +190,31 @@ class Lecture extends Component {
 
         return (
         <View style={ container }>
-            {/* <View style={row1}>
-                <TouchableOpacity onPress={this.goBack.bind(this)}>
-                    <Image source={icBack} style={iconStyle} />
-                </TouchableOpacity>
-                <Text style={titleStyle}>Giới thiệu chung</Text>
-                <Image source={icLogo} style={iconStyle} />
-            </View> */}
-
             <ScrollableTabView
-            renderTabBar={() => (
+                renderTabBar={() => (
                 <TabBar
                 underlineColor="#000"
                 tabBarStyle={{ backgroundColor: "#666363", borderTopColor: '#d2d2d2', borderTopWidth: 1 }}
                 renderTab={(tab, page, isTabActive, onPressHandler, onTabLayout) => (
                     <Tab
-                    key={page}
-                    tab={tab}
-                    page={page}
-                    isTabActive={isTabActive}
-                    onPressHandler={onPressHandler}
-                    onTabLayout={onTabLayout}
-                    styles={this.interpolators[page]}
+                        key={page}
+                        tab={tab}
+                        page={page}
+                        isTabActive={isTabActive}
+                        onPressHandler={onPressHandler}
+                        onTabLayout={onTabLayout}
+                        styles={this.interpolators[page]}
                     />
                 )}
                 />
             )}
             onScroll={(x) => this._scrollX.setValue(x)}
             >
-            {/* {datas.map( e => (
-                (typeof e.des !== "undefined") ? <PageLyThuyet tabLabel={{label: e.til}} e = {e}/>
-                    : (typeof e.vide !== "undefined") ? <PageVideo tabLabel={{label: e.til}} e = {e}/>
-                    : <PageBaiTap tabLabel={{label: e.til}} e = {e}/>
-                
-            ))} */}
-
             {
                 listData.map(data => {
                     
                     if(data.document_types.name === "Lý thuyết") {
+                        // console.log(data);
                         return (
                             <PageLyThuyet tabLabel={{label: data.name}} e={data} />
                         );
