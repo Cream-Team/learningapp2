@@ -18,67 +18,6 @@ import {
 import { Registerhead } from "../components/Registerhead";
 import { LinearGradient } from "expo-linear-gradient";
 
-  render() {
-    const { email, password, rePassword } = this.state;
-    return (
-      <View styles={styles.container}>
-        <View style={styles.head}>
-          <Registerhead />
-        </View>
-        <View style={styles.body}>
-          <View style={styles.rect}>
-            <TextInput
-              placeholder="Email"
-              textBreakStrategy="highQuality"
-              keyboardType="email-address"
-              style={styles.textInput}
-              onChangeText={(text) => this.setState({ email: text })}
-              color="#000"
-            ></TextInput>
-          </View>
-          <View style={styles.rect}>
-            <TextInput
-              placeholder="Password"
-              textContentType="password"
-              secureTextEntry={true}
-              style={styles.textInput}
-              onChangeText={(text) => this.setState({ password: text })}
-              color="#000"
-            ></TextInput>
-          </View>
-          <View style={styles.rect}>
-            <TextInput
-              placeholder="Re-password"
-              textContentType="password"
-              secureTextEntry={true}
-              style={styles.textInput}
-              onChangeText={(text) => this.setState({ rePassword: text })}
-              color="#000"
-            ></TextInput>
-          </View>
-        </View>
-        <View style={styles.footerContainer}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-            <LinearGradient
-              colors={["#884BCB", "#7A43CB", "#713ECD"]}
-              style={styles.button}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  fontSize: responsiveFontSize(1.5),
-                }}
-              >
-                CONFIRM
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
 import register from "../api/register";
 import saveToken from "../api/saveToken";
 
@@ -145,7 +84,67 @@ class Register extends Component {
                 });
         }
     }
-
+    render() {
+      const { email, password, rePassword } = this.state;
+      return (
+        <View styles={styles.container}>
+          <View style={styles.head}>
+            <Registerhead />
+          </View>
+          <View style={styles.body}>
+            <View style={styles.rect}>
+              <TextInput
+                placeholder="Email"
+                textBreakStrategy="highQuality"
+                keyboardType="email-address"
+                style={styles.textInput}
+                onChangeText={(text) => this.setState({ email: text })}
+                color="#000"
+              ></TextInput>
+            </View>
+            <View style={styles.rect}>
+              <TextInput
+                placeholder="Password"
+                textContentType="password"
+                secureTextEntry={true}
+                style={styles.textInput}
+                onChangeText={(text) => this.setState({ password: text })}
+                color="#000"
+              ></TextInput>
+            </View>
+            <View style={styles.rect}>
+              <TextInput
+                placeholder="Re-password"
+                textContentType="password"
+                secureTextEntry={true}
+                style={styles.textInput}
+                onChangeText={(text) => this.setState({ rePassword: text })}
+                color="#000"
+              ></TextInput>
+            </View>
+          </View>
+          <View style={styles.footerContainer}>
+            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+              <LinearGradient
+                colors={["#884BCB", "#7A43CB", "#713ECD"]}
+                style={styles.button}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    fontSize: responsiveFontSize(1.5),
+                  }}
+                >
+                  CONFIRM
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
 }
 
 export default Register;
