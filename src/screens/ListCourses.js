@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
-import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
+import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE, MARGIN_VIEW, DEVICE_HEIGHT } from "../constant/Constant";
 import initDataCourse from "../api/initDataCourses";
 import getToken from "../api/getToken";
 import { TextInput } from "react-native-gesture-handler";
@@ -29,7 +29,7 @@ class ListCourses extends Component {
     _search(text){
         let list = [];
         this.state.data.map(function(value){
-          if(value.code.indexOf(text) > -1){
+          if(value.code.indexOf(text) > -1 || value.code.indexOf(text.toUpperCase()) > -1){
             list.push(value);
           }
         });
@@ -37,6 +37,15 @@ class ListCourses extends Component {
           listData:list,
           search:text
         });
+    }
+
+    _timeFormat(text) {
+        // console.log(text);
+        let y = text.substr(0, 4);
+        let m = text.substr(5, 2);
+        let d = text.substr(8, 2);
+
+        return `Khóa học từ ${d}/${m}/${y}`;
     }
 
     render() {
@@ -51,20 +60,26 @@ class ListCourses extends Component {
                             placeholder='Search'
                             value={this.state.search}
                             onChangeText={(text)=>this._search(text)}
+                            style = { styles.textInput }
                         >
                         </TextInput>
                     </View>
                     { listData.map((item) => {
                         return (
-                            <TouchableOpacity
-                                style={ styles.rect2 }
-                                onPress={() => this.gotoCourse(item.id)}
-                                key={item.id}
-                            >
-                                <Text style={ styles.textButton }> {item.code} </Text>
-                                <Text style={ styles.textButton }> {item.started_at} </Text>
-                                <Image style={ styles.productImage } source={{uri:item.thumbnail}}></Image>
-                            </TouchableOpacity>
+                            <View style={ styles.productContainer}>
+                                <TouchableOpacity
+                                    style={ styles.rect2 }
+                                    onPress={() => this.gotoCourse(item.id)}
+                                    key={item.id}
+                                >
+                                    <Image style={ styles.productImage } source={{uri:item.thumbnail}}></Image>
+                                    <View>
+                                        <Text style={ styles.textTittle }> {item.code} </Text>
+                                        <Text style={ styles.textTime }> {this._timeFormat(item.started_at)} </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                            
                         );
                     }) }
                 </ScrollView>
@@ -73,6 +88,18 @@ class ListCourses extends Component {
     }
 }
 
+/*
+<View style={productContainer}>
+          <Image source={ RNIC } style={productImage}></Image>
+          <View style={productInfo}>
+            <Text style={txtName} onPress = {this.gotoCourse.bind(this)}>React Native</Text>
+            <Text style={txtDel}>FUNiX - FUN111x_02_VN</Text>
+            <Text style={txtDel}>Đã Bắt đầu - 1 Th09 2019</Text>
+          </View>
+        </View>
+
+          
+*/
 export default ListCourses;
 
 const styles = StyleSheet.create({
@@ -84,22 +111,56 @@ const styles = StyleSheet.create({
     },
 
     rect2: {
+        backgroundColor: '#ffd',
         borderColor: "#000",
         borderWidth: 1,
-        flexDirection: "column",
-        width: DEVICE_WIDTH,
+        borderRadius: 10,
+        flexDirection: "row",
+        width: DEVICE_WIDTH - 10,
         height: 100,
         padding: PADDING_CONTENT,
     },
 
-    textButton: {
+    textTittle: {
         color: "#000",
-        fontSize: TEXTSIZE
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginLeft: 10
     },
+
+    textTime: {
+        color: "#000",
+        fontSize: 16,
+        marginTop: 10,
+        marginLeft: 10
+    },
+
     productImage: {
+        borderRadius: 10,
+        marginBottom: 15,
+        width: 80,
+        height: 80
+    },
+
+    productContainer: {
+        margin: 5,
+        backgroundColor: '#666363',
+        borderRadius: 15,
+        flexDirection: 'row',
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+    textInput: { 
+        color: '#000',
         margin: 5,
         borderRadius: 10,
-        width: 90,
-        height: (90 * 450) / 400
+        height: DEVICE_HEIGHT / 20, 
+        width: DEVICE_WIDTH - 10,
+        backgroundColor: '#fff', 
+        paddingLeft: 10,
+        paddingVertical: 0, 
+        borderColor: 'gray',
+        borderWidth: 2
     },
 });

@@ -12,9 +12,12 @@ import Course from './src/screens/Course';
 import Lecture from './src/screens/Lecture';
 import ChangePassword from './src/screens/ChangePassword';
 
+import { LogBox } from 'react-native';
+
 const Stack = createStackNavigator();
 
 export default function App() {
+  // LogBox.ignoreLogs(['Warning: ...']);
   return (
     <NavigationContainer>
       <Stack.Navigator

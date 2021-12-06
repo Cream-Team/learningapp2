@@ -84,6 +84,7 @@ class Register extends Component {
                 });
         }
     }
+
     render() {
       const { email, password, rePassword } = this.state;
       return (
@@ -124,7 +125,7 @@ class Register extends Component {
             </View>
           </View>
           <View style={styles.footerContainer}>
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <TouchableOpacity onPress={this.onSignUp.bind(this)}>
               <LinearGradient
                 colors={["#884BCB", "#7A43CB", "#713ECD"]}
                 style={styles.button}

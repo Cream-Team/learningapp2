@@ -11,25 +11,10 @@ import global from '../global';
 import submitExercise from '../api/submitExercise';
 
 var hobbies = [
-    {label: "2", value: 0},
-    {label: "II", value: 1},
-    {label: "Hai", value: 2},
+    {label: "2", id: 0},
+    {label: "II", id: 1},
+    {label: "Hai", id: 2},
 ];
-
-// const datas = [
-//     {
-//         des: 'Mục tiêu bài học\n\n1. Mục tiêu bài học:\n\nTrong bài học này chúng ta sẽ tìm hiểu về hai loại giới hạn đặc biệt 0/0 hoặc  và quy tắc L’Hospital để tính hai loại giới hạn đó.\n\nNgoài ra sinh viên sẽ xem thêm nội dung tại đây\n\n2. Những điểm lưu ý về bài học: N/A\n\n3. Thời gian cần thiết để học bài này: 189 phút',
-//         til: 'Đây Là Lý Thuyết',
-//     },
-//     {
-//         vide: "https://www.w3schools.com/html/mov_bbb.mp4",
-//         til: 'Đây Là Video',
-//     },
-//     {
-//         til: 'Đây Là Bài tập',
-//         ques: 'Một cộng một bằng?',
-//     }
-// ]
 
 const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) => {
   const { label } = tab;
@@ -88,8 +73,8 @@ class Lecture extends Component {
     compareAnswer(e) {
         // console.log(e);
 
-        const user_id = global.onSignIn.id;
-        const document_id = e.id;
+        // const user_id = global.onSignIn.id;
+        // const document_id = e.id;
 
         /*
         const answer = e.correct
@@ -212,21 +197,20 @@ class Lecture extends Component {
             >
             {
                 listData.map(data => {
-                    
                     if(data.document_types.name === "Lý thuyết") {
                         // console.log(data);
                         return (
-                            <PageLyThuyet tabLabel={{label: data.name}} e={data} />
+                            <PageLyThuyet tabLabel={{label: data.name}} e={data} key={0} />
                         );
                     }
                     if(data.document_types.name === "Bài tập") {
                         return (
-                            <PageBaiTap tabLabel={{label: data.name}} e={data} />
+                            <PageBaiTap tabLabel={{label: data.name}} e={data} key={1} />
                         );
                     }
                     if(data.document_types.name === "Video") {
                         return (
-                            <PageVideo tabLabel={{label: data.name}} e={data}/>
+                            <PageVideo tabLabel={{label: data.name}} e={data} key={2} />
                         );
                     }
                 })

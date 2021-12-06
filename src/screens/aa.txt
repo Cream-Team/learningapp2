@@ -18,15 +18,17 @@ Array [
 
 Array [
   Object {
-    "document_type_id": "8db4dfa0-60a8-4772-bcf6-86799c7d91dd",
+    "document_type_id": "4ce61128-4406-46f0-bf9b-225123a85a94",
     "document_types": Object {
-      "id": "8db4dfa0-60a8-4772-bcf6-86799c7d91dd",
-      "name": "Lý thuyết",
+      "id": "4ce61128-4406-46f0-bf9b-225123a85a94",
+      "name": "Video",
     },
-    "id": "f7fde1c1-b059-48f9-b8e0-74e4d3f988c9",
+    "id": "2ff4eda5-f28d-4d96-a383-36c3c340829a",
     "lecture_id": "bcf02519-ff66-4dd4-a16d-027d40bdc727",
-    "meta": null,
-    "name": "Lý thuyết bài 1",
+    "meta": Object {
+      "url": "https://www.w3schools.com/html/mov_bbb.mp4",
+    },
+    "name": "Video bài giảng",
     "practices": Array [],
   },
   Object {
@@ -40,16 +42,16 @@ Array [
     "meta": Object {
       "anwsers": Array [
         Object {
-          "data": 2,
-          "id": 0,
+          "label": 0,
+          "value": 2,
         },
         Object {
-          "data": 1,
-          "id": 1,
+          "label": 1,
+          "value": 1,
         },
         Object {
-          "data": 0,
-          "id": 2,
+          "label": 2,
+          "value": 0,
         },
       ],
       "correct": 0,
@@ -59,17 +61,17 @@ Array [
     "practices": Array [],
   },
   Object {
-    "document_type_id": "4ce61128-4406-46f0-bf9b-225123a85a94",
+    "document_type_id": "8db4dfa0-60a8-4772-bcf6-86799c7d91dd",
     "document_types": Object {
-      "id": "4ce61128-4406-46f0-bf9b-225123a85a94",
-      "name": "Video",
+      "id": "8db4dfa0-60a8-4772-bcf6-86799c7d91dd",
+      "name": "Lý thuyết",
     },
-    "id": "2ff4eda5-f28d-4d96-a383-36c3c340829a",
+    "id": "f7fde1c1-b059-48f9-b8e0-74e4d3f988c9",
     "lecture_id": "bcf02519-ff66-4dd4-a16d-027d40bdc727",
     "meta": Object {
-      "url": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "description": "I'm description",
     },
-    "name": "Video bài giảng",
+    "name": "Lý thuyết bài 1",
     "practices": Array [],
   },
 ]

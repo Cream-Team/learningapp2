@@ -52,7 +52,7 @@ class Profile extends Component {
                     data={ items }
                     renderItem={({ item }) =>
                         <TouchableOpacity
-                            style = { styles.rect }
+                            style = { styles.btnSignInStyle }
                             onPress = {() => this.factory(item)}
                         >
                             <Text style = { styles.textButton }>{ item.key }</Text>
@@ -89,5 +89,23 @@ const styles = StyleSheet.create({
     textButton: {
         color: "#000",
         fontSize: TEXTSIZE
+    },
+
+    btnSignInStyle: {
+        borderColor: '#000',
+        borderWidth: 1,
+        borderRadius: 10,
+        height: 50,
+        backgroundColor: '#ffd',
+        width: DEVICE_WIDTH - 20,   
+        marginBottom: 10,
+        justifyContent: 'center',
+        paddingLeft: 10
+    },
+
+    btnTextSignIn: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
