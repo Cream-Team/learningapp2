@@ -3,17 +3,18 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "rea
 import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
 import initDataCourse from "../api/initDataCourses";
 import getToken from "../api/getToken";
+import { TextInput } from "react-native-gesture-handler";
 
 class ListCourses extends Component {
     constructor(props) {
         super(props);
-        this.state = { listData: [] };
+        this.state = { listData: [], data: [], search: ''};
     }
 
     componentDidMount() {
         getToken()
         .then(token => initDataCourse(token))
-        .then(listData => this.setState({ listData }))
+        .then(listData => this.setState({ listData, data: listData }))
         .catch(err => this.gotoLogin());
     }
     
@@ -25,6 +26,19 @@ class ListCourses extends Component {
         this.props.navigation.navigate("Login");
     }
 
+    _search(text){
+        let list = [];
+        this.state.data.map(function(value){
+          if(value.code.indexOf(text) > -1){
+            list.push(value);
+          }
+        });
+        this.setState({
+          listData:list,
+          search:text
+        });
+    }
+
     render() {
         const { listData } = this.state;
         // console.log(listData);
@@ -32,6 +46,14 @@ class ListCourses extends Component {
         return(
             <View style={ styles.container }>
                 <ScrollView>
+                    <View>
+                        <TextInput
+                            placeholder='Search'
+                            value={this.state.search}
+                            onChangeText={(text)=>this._search(text)}
+                        >
+                        </TextInput>
+                    </View>
                     { listData.map((item) => {
                         return (
                             <TouchableOpacity

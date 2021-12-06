@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from "react-native";
 import { DEVICE_HEIGHT, DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
 
-import Login from './Login';
-import ProfileDetails from './ProfileDetails';
 import global from "../global";
 import saveToken from "../api/saveToken";
 
@@ -36,10 +34,16 @@ class Profile extends Component {
                 toGo: "ProfileDetails"
             },
             {
+                id: 2,
+                key: 'Đổi mật khẩu',
+                toGo: 'ChangePassword'
+            },
+            {
                 id: 1,
                 key: 'Đăng xuất',
                 toGo: "Login"
-            }
+            },
+            
         ];
         
         return(
