@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
-import { DEVICE_WIDTH, PADDING_CONTENT, TEXTSIZE, MARGIN_VIEW, DEVICE_HEIGHT } from "../constant/Constant";
+import { DEVICE_WIDTH, PADDING_CONTENT, DEVICE_HEIGHT } from "../constant/Constant";
 import initDataCourse from "../api/initDataCourses";
 import getToken from "../api/getToken";
 import { TextInput } from "react-native-gesture-handler";
@@ -66,11 +66,10 @@ class ListCourses extends Component {
                     </View>
                     { listData.map((item) => {
                         return (
-                            <View style={ styles.productContainer}>
+                            <View style={ styles.productContainer} key={item.id}>
                                 <TouchableOpacity
                                     style={ styles.rect2 }
                                     onPress={() => this.gotoCourse(item.id)}
-                                    key={item.id}
                                 >
                                     <Image style={ styles.productImage } source={{uri:item.thumbnail}}></Image>
                                     <View>
@@ -88,18 +87,6 @@ class ListCourses extends Component {
     }
 }
 
-/*
-<View style={productContainer}>
-          <Image source={ RNIC } style={productImage}></Image>
-          <View style={productInfo}>
-            <Text style={txtName} onPress = {this.gotoCourse.bind(this)}>React Native</Text>
-            <Text style={txtDel}>FUNiX - FUN111x_02_VN</Text>
-            <Text style={txtDel}>Đã Bắt đầu - 1 Th09 2019</Text>
-          </View>
-        </View>
-
-          
-*/
 export default ListCourses;
 
 const styles = StyleSheet.create({

@@ -7,8 +7,8 @@ import {
 
 export const Loginhead = () => (
   <View>
-    <Text style={styles.title}>Hello user</Text>
-    <Text style={styles.subTitle}>Yo?</Text>
+    <Text style={styles.title}>Xin chào</Text>
+    <Text style={styles.subTitle}>Chúc bạn học tập tốt</Text>
   </View>
 );
 

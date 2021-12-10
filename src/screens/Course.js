@@ -65,7 +65,7 @@ class Course extends Component {
                                 {
                                     item.lectures.map((lecture) => {
                                         return  (
-                                            <TouchableOpacity>
+                                            <TouchableOpacity key={lecture.id}>
                                                 <Text
                                                     style = {txtName}
                                                     onPress = {() => this.gotoLecture(lecture.id)}

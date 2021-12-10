@@ -5,7 +5,7 @@ class ProfileDetails extends Component {
     render() {
         return (
             <View style={ styles.container }>
-                <Text>This is ProfileDetails!!!</Text>
+                <Text>CHỨC NĂNG VẪN ĐANG PHÁT TRIỂN</Text>
             </View>
         );
     }

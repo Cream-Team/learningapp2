@@ -8,12 +8,7 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import {
-  DEVICE_WIDTH,
-  MARGIN_VIEW,
-  PADDING_CONTENT,
-  TEXTSIZE,
-} from "../constant/Constant";
+import { theme } from "../core/theme";
 
 import { Registerhead } from "../components/Registerhead";
 import { LinearGradient } from "expo-linear-gradient";
@@ -105,7 +100,7 @@ class Register extends Component {
             </View>
             <View style={styles.rect}>
               <TextInput
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 textContentType="password"
                 secureTextEntry={true}
                 style={styles.textInput}
@@ -115,7 +110,7 @@ class Register extends Component {
             </View>
             <View style={styles.rect}>
               <TextInput
-                placeholder="Re-password"
+                placeholder="Nhập lại mật khẩu"
                 textContentType="password"
                 secureTextEntry={true}
                 style={styles.textInput}
@@ -138,10 +133,19 @@ class Register extends Component {
                     fontSize: responsiveFontSize(1.5),
                   }}
                 >
-                  CONFIRM
+                  ĐỒNG Ý
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
+
+            <View style={styles.row}>
+              <Text>Đã có tài khoản? Quay trở lại </Text>
+              <TouchableOpacity
+                onPress={this.goBack.bind(this)}
+              >
+                <Text style={styles.link}>Đăng nhập</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       );
@@ -205,5 +209,15 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
     marginLeft: responsiveWidth(2),
     alignSelf: "center",
+  },
+
+  row: {
+    flexDirection: "row",
+    marginTop: responsiveHeight(2.5),
+    alignSelf: "center",
+  },
+  link: {
+    fontWeight: "bold",
+    color: theme.colors.primary,
   },
 });
