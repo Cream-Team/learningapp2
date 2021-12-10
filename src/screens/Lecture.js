@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Image, ScrollView } from 'react-native';
+import React, { Component, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Animated, Alert, ScrollView } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from 'react-native-underline-tabbar';
 import RadioButtonRN from 'radio-buttons-react-native';
@@ -10,8 +10,9 @@ import initDataDetailLecture from '../api/initDataDetailLecture';
 import global from '../global';
 import submitExercise from '../api/submitExercise';
 import { RadioButton } from 'react-native-paper';
+import { DEVICE_WIDTH } from '../constant/Constant';
 
-const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) => {
+const Tab = ({ tab, page, onPressHandler, onTabLayout, styles }) => {
   const { label } = tab;
   const style = {
     marginHorizontal: 20,
@@ -50,14 +51,12 @@ const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) =>
 class Lecture extends Component {
     constructor(props) {
         super(props);
-        this.state = { listData: [], checked: 1 };
+        this.state = { listData: [] };
     }
 
     componentDidMount() {
         const id = this.props.route.params;
         const user_id = global.onSignIn.id;
-
-        // console.log(this.props);
 
         getToken()
         .then(token => initDataDetailLecture(token, user_id, id))
@@ -65,30 +64,41 @@ class Lecture extends Component {
         .catch(err => this.gotoLogin());
     }
 
-    compareAnswer(e) {
-        // console.log(e);
-
+    compareAnswer(e, checked) {
         const user_id = global.onSignIn.id;
         const document_id = e.id;
 
-        const answer = e.meta.correct;
-        const user_answer = this.state.checked;
+        const correct_answer = e.meta.correct;
+        const answer = checked;
         
-        const is_correct = (answer === user_answer);
+        const is_correct = (answer === correct_answer);
 
-        const data = {
-            user_id: user_id,
-            document_id: document_id,
-            answer: user_answer,
-            is_correct: is_correct,
-        };
-        // console.log(data);
-
+        if(is_correct) this.onSuccess()
+        else this.onFail()
+        
         getToken()
-        .then(token => submitExercise(token, data))
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
-        
+        .then(token => submitExercise(token, user_id, document_id, answer, is_correct) )
+        .then(
+            // res => console.log(res)
+        )
+        .catch(
+            // err => console.log(err)
+        )
+    }
+
+    onSuccess() {
+        Alert.alert( 'Thông báo', 'Đáp án đúng',
+            [
+                { text: 'OK' }
+            ],
+        );
+    }
+
+    onFail() {
+        Alert.alert('Thông báo', 'Đáp án sai',
+        [
+            { text: 'OK' },
+        ]);
     }
 
     goBack = () => {
@@ -122,8 +132,6 @@ class Lecture extends Component {
     render() {
         const { listData } = this.state;
         
-        // console.log(listData);
-
         const PageLyThuyet = ({e}) => (
             <ScrollView style={styles.container}>
                 <Text style = {formatText}> {e.name} </Text>
@@ -143,86 +151,90 @@ class Lecture extends Component {
                 />
             </ScrollView>
         );
-        const PageBaiTap = ({e}) => (
-            <ScrollView style={styles.container}>
-                <Text style = {formatText}> {e.name} </Text>
-                <Text style = {formatText}> {e.meta.question} </Text>
-                
-                <RadioButton.Group
-                    onValueChange={value => this.setState({checked: value})}
-                    value = {this.state.checked}
-                >
-                    {
-                        e.meta.answers.map(data => {
-                            return (
-                                <RadioButton.Item
-                                    value={data.id}
-                                    style={styles.cardRadio}
-                                    label={data.label}
-                                />
-                            );
-                        })
-                    }
-                </RadioButton.Group>
+        const PageBaiTap = ({e}) => {
+            let [checked, setChecked] = useState(parseInt(e.practices[e.practices.length - 1].answer));
 
-                <TouchableOpacity
-                    style={btnMark}
-                    onPress={this.compareAnswer(e)}
-                >
-                    <Text style = {{color: '#fff'}}>Gửi</Text>
-                </TouchableOpacity>
-            </ScrollView>
-        );
+            return (
+                <ScrollView style={styles.container}>
+                    <Text style = {formatText}> {e.name} </Text>
+                    <Text style = {formatText}> {e.meta.question} </Text>
+                    
+                    <RadioButton.Group
+                        onValueChange={v => {setChecked(v)}}
+                        value = {checked}
+                    >
+                        {
+                            e.meta.answers.map(data => {
+                                return (
+                                    <RadioButton.Item
+                                        value={data.id}
+                                        style={styles.cardRadio}
+                                        label={data.label}
+                                    />
+                                );
+                            })
+                        }
+                    </RadioButton.Group>
+    
+                    <TouchableOpacity
+                        style={btnMark}
+                        // onPress={() => this.compareAnswer(e, checked)}
+                    >
+                        <Text style = {{color: '#000'}}>Gửi</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            );
+        }
         const {
             container, video,
-            formatText, btnMark, radioBtn, 
+            formatText, btnMark, 
         } = styles;
 
         return (
-        <View style={ container }>
-            <ScrollableTabView
-                renderTabBar={() => (
-                <TabBar
-                underlineColor="#000"
-                tabBarStyle={{ backgroundColor: "#666363", borderTopColor: '#d2d2d2', borderTopWidth: 1 }}
-                renderTab={(tab, page, isTabActive, onPressHandler, onTabLayout) => (
-                    <Tab
-                        key={page}
-                        tab={tab}
-                        page={page}
-                        isTabActive={isTabActive}
-                        onPressHandler={onPressHandler}
-                        onTabLayout={onTabLayout}
-                        styles={this.interpolators[page]}
+            <View style={ container }>
+                <ScrollableTabView
+                    renderTabBar={() => (
+                    <TabBar
+                        underlineColor="#000"
+                        tabBarStyle={{ backgroundColor: "#666363", borderTopColor: '#d2d2d2', borderTopWidth: 1 }}
+                        renderTab={(tab, page, isTabActive, onPressHandler, onTabLayout) => (
+                            <Tab
+                                key={page}
+                                tab={tab}
+                                page={page}
+                                isTabActive={isTabActive}
+                                onPressHandler={onPressHandler}
+                                onTabLayout={onTabLayout}
+                                styles={this.interpolators[page]}
+                            />
+                        )}
                     />
-                )}
-                />
-            )}
-            onScroll={(x) => this._scrollX.setValue(x)}
-            >
-            {
-                listData.map(data => {
-                    if(data.document_types.name === "Lý thuyết") {
-                        return (
-                            <PageLyThuyet tabLabel={{label: data.name}} e={data} key={0} />
-                        );
+                    )}
+                    onScroll={(x) => this._scrollX.setValue(x)}
+                >
+                    {
+                        listData.map(data => {
+                            if(data.document_types.name === "Lý thuyết") {
+                                return (
+                                    <PageLyThuyet tabLabel={{label: data.name}} e={data} key={0} />
+                                );
+                            }
+                            if(data.document_types.name === "Bài tập") {
+                                return (
+                                    <PageBaiTap tabLabel={{label: data.name}} e={data} key={1} />
+                                );
+                            }
+                            if(data.document_types.name === "Video") {
+                                return (
+                                    <PageVideo tabLabel={{label: data.name}} e={data} key={2} />
+                                );
+                            }
+                        })
                     }
-                    if(data.document_types.name === "Bài tập") {
-                        return (
-                            <PageBaiTap tabLabel={{label: data.name}} e={data} key={1} />
-                        );
-                    }
-                    if(data.document_types.name === "Video") {
-                        return (
-                            <PageVideo tabLabel={{label: data.name}} e={data} key={2} />
-                        );
-                    }
-                })
-            }
-            </ScrollableTabView>
-        </View>
-    );
-  }
+                </ScrollableTabView>
+            </View>
+        );
+    }
 }
 
 export default Lecture;
@@ -245,12 +257,12 @@ const styles = StyleSheet.create({
         borderRadius: 25,
     },
     btnMark: {
-        marginLeft: 220,
+        marginLeft: DEVICE_WIDTH / 1.5,
         margin: 10,
         height: 40,
-        backgroundColor: '#262525',
+        backgroundColor: '#fff',
         borderRadius: 20,
-        width: 120,
+        width: (DEVICE_WIDTH - 15) - DEVICE_WIDTH / 1.5,
         alignItems: 'center',
         justifyContent: 'center',
     },

@@ -56,15 +56,15 @@ gotoRegister() {
 }
 
 onSuccess() {
-    Alert.alert(
-        'Thông báo',
-        'Đăng nhập thành công',
-        [
-            { text: 'OK' }
-        ],
-        { cancelable: false }
-    );
-  }
+  Alert.alert(
+      'Thông báo',
+      'Đăng nhập thành công',
+      [
+          { text: 'OK' }
+      ],
+      { cancelable: false }
+  );
+}
 
 onFail() {
     Alert.alert('Thông báo', 'Đăng nhập thất bại', [
