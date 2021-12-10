@@ -9,12 +9,7 @@ import getToken from '../api/getToken';
 import initDataDetailLecture from '../api/initDataDetailLecture';
 import global from '../global';
 import submitExercise from '../api/submitExercise';
-
-var hobbies = [
-    {label: "2", id: 0},
-    {label: "II", id: 1},
-    {label: "Hai", id: 2},
-];
+import { RadioButton } from 'react-native-paper';
 
 const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) => {
   const { label } = tab;
@@ -55,7 +50,7 @@ const Tab = ({ tab, page, isTabActive, onPressHandler, onTabLayout, styles }) =>
 class Lecture extends Component {
     constructor(props) {
         super(props);
-        this.state = { listData: [] };
+        this.state = { listData: [], checked: 1 };
     }
 
     componentDidMount() {
@@ -73,27 +68,27 @@ class Lecture extends Component {
     compareAnswer(e) {
         // console.log(e);
 
-        // const user_id = global.onSignIn.id;
-        // const document_id = e.id;
+        const user_id = global.onSignIn.id;
+        const document_id = e.id;
 
-        /*
-        const answer = e.correct
-        const user_answer = (get from RadioButton)
+        const answer = e.meta.correct;
+        const user_answer = this.state.checked;
         
-        const is_correct = answer === user_answer;
+        const is_correct = (answer === user_answer);
 
         const data = {
             user_id: user_id,
-            document_id: e.id,
+            document_id: document_id,
             answer: user_answer,
             is_correct: is_correct,
         };
+        // console.log(data);
 
         getToken()
         .then(token => submitExercise(token, data))
         .then(res => console.log(res))
         .catch(err => console.log(err))
-        */
+        
     }
 
     goBack = () => {
@@ -123,15 +118,16 @@ class Lecture extends Component {
         extrapolate: 'clamp',
         }),
     }));
-
+    
     render() {
         const { listData } = this.state;
+        
         // console.log(listData);
 
         const PageLyThuyet = ({e}) => (
             <ScrollView style={styles.container}>
                 <Text style = {formatText}> {e.name} </Text>
-                <Text style = {formatText}>{e.meta.description}</Text>
+                <Text style = {formatText}> {e.meta.description} </Text>
             </ScrollView>
           );
           
@@ -149,29 +145,38 @@ class Lecture extends Component {
         );
         const PageBaiTap = ({e}) => (
             <ScrollView style={styles.container}>
-            <Text style = {formatText}> {e.name} </Text>
-            <Text style = {formatText}> {e.meta.question} </Text>
-            <RadioButtonRN
-                // data={e.meta.answers}
-                data={hobbies}
-                initial={1}
-                circleSize={16}
-                style={radioBtn}
-            />
-            <TouchableOpacity
-                style={btnMark}
-                onPress={this.compareAnswer(e)}
-            >
-                <Text style = {{color: '#fff'}}>Gửi</Text>
-            </TouchableOpacity>
+                <Text style = {formatText}> {e.name} </Text>
+                <Text style = {formatText}> {e.meta.question} </Text>
+                
+                <RadioButton.Group
+                    onValueChange={value => this.setState({checked: value})}
+                    value = {this.state.checked}
+                >
+                    {
+                        e.meta.answers.map(data => {
+                            return (
+                                <RadioButton.Item
+                                    value={data.id}
+                                    style={styles.cardRadio}
+                                    label={data.label}
+                                />
+                            );
+                        })
+                    }
+                </RadioButton.Group>
+
+                <TouchableOpacity
+                    style={btnMark}
+                    onPress={this.compareAnswer(e)}
+                >
+                    <Text style = {{color: '#fff'}}>Gửi</Text>
+                </TouchableOpacity>
             </ScrollView>
         );
         const {
-            container, row1, titleStyle, iconStyle, video,
-            wrapper, formatText, btnMark, radioBtn, 
+            container, video,
+            formatText, btnMark, radioBtn, 
         } = styles;
-
-        
 
         return (
         <View style={ container }>
@@ -198,7 +203,6 @@ class Lecture extends Component {
             {
                 listData.map(data => {
                     if(data.document_types.name === "Lý thuyết") {
-                        // console.log(data);
                         return (
                             <PageLyThuyet tabLabel={{label: data.name}} e={data} key={0} />
                         );
@@ -318,5 +322,12 @@ const styles = StyleSheet.create({
     radioBtn: {
         width: 300,
         marginLeft: 35,
+    },
+    cardRadio: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 5
     },
   });
