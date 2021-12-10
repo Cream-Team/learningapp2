@@ -8,19 +8,11 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  DEVICE_HEIGHT,
-  DEVICE_WIDTH,
-  MARGIN_VIEW,
-  PADDING_CONTENT,
-  TEXTSIZE,
-} from "../constant/Constant";
 import { Loginhead } from "../components/Loginhead";
 import global from '../global';
 import signIn from '../api/signIn';
 import saveToken from '../api/saveToken';
 import getToken from '../api/getToken';
-import initData from "../api/initDataCourses";
 import getUserLogged from "../api/getUserLogged";
 
 
@@ -38,47 +30,47 @@ class Login extends Component {
     .then(token => getUserLogged(token))
     .then(res => this.redirectToMain(res))
     .catch(err => console.log(err));
-}
+  }
 
-redirectToMain(res) {
-    if(res.email) {
-        global.onSignIn = res;
-        this.props.navigation.navigate("Home")
-    }
-}
+  redirectToMain(res) {
+      if(res.email) {
+          global.onSignIn = res;
+          this.props.navigation.navigate("Home")
+      }
+  }
 
-gotoMain() {
-    this.props.navigation.navigate("Home")
-}
+  gotoMain() {
+      this.props.navigation.navigate("Home")
+  }
 
-gotoRegister() {
-    this.props.navigation.navigate("Register")
-}
+  gotoRegister() {
+      this.props.navigation.navigate("Register")
+  }
 
-onSuccess() {
-  Alert.alert(
-      'Thông báo',
-      'Đăng nhập thành công',
-      [
-          { text: 'OK' }
-      ],
-      { cancelable: false }
-  );
-}
+  onSuccess() {
+    Alert.alert(
+        'Thông báo',
+        'Đăng nhập thành công',
+        [
+            { text: 'OK' }
+        ],
+        { cancelable: false }
+    );
+  }
 
-onFail() {
-    Alert.alert('Thông báo', 'Đăng nhập thất bại', [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        { text: 'OK'},
-    ]);
-}
+  onFail() {
+      Alert.alert('Thông báo', 'Đăng nhập thất bại', [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          { text: 'OK'},
+      ]);
+  }
 
-onSignIn() {
-  const { email, password } = this.state;
-  signIn(email, password)
+  onSignIn() {
+    const { email, password } = this.state;
+    signIn(email, password)
     .then(res => {
       if(res.user) {
         global.onSignIn = res.user;
@@ -116,7 +108,7 @@ onSignIn() {
           </View>
           <View style={styles.rect}>
             <TextInput
-              placeholder="Password"
+              placeholder="Mật khẩu"
               secureTextEntry={true}
               style={styles.textInput}
               onChangeText={(text) => this.setState({ password: text })}
@@ -141,86 +133,23 @@ onSignIn() {
                   fontSize: responsiveFontSize(1.5),
                 }}
               >
-                SIGN IN
+                ĐĂNG NHẬP
               </Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <View style={styles.row}>
-            <Text>Don’t have an account? </Text>
+            <Text>Chưa có tài khoản? </Text>
             <TouchableOpacity
               onPress={this.gotoRegister.bind(this)}
             >
-              <Text style={styles.link}>Sign up</Text>
+              <Text style={styles.link}>Đăng ký ngay</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
     );
   }
-    componentDidMount() {
-        getToken()
-        .then(token => getUserLogged(token))
-        .then(res => this.redirectToMain(res))
-        .catch(err => console.log(err));
-    }
-
-    redirectToMain(res) {
-        if(res.email) {
-            global.onSignIn = res;
-            this.props.navigation.navigate("Home")
-        }
-    }
-
-    gotoMain() {
-        this.props.navigation.navigate("Home")
-    }
-
-    gotoRegister() {
-        this.props.navigation.navigate("Register")
-    }
-
-    onSuccess() {
-        Alert.alert(
-            'Thông báo',
-            'Đăng nhập thành công',
-            [
-                { text: 'OK' }
-            ],
-            { cancelable: false }
-        );
-      }
-    
-    onFail() {
-        Alert.alert('Alert Title', 'My Alert Msg', [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
-        ]);
-    }
-
-    onSignIn() {
-        const { email, password } = this.state;
-        signIn(email, password)
-          .then(res => {
-            if(res.user) {
-              global.onSignIn = res.user;
-              saveToken(res.access_token);
-              this.onSuccess();
-              this.gotoMain();
-            } else {
-              console.log(res)
-              this.onFail();
-            }
-          })
-          .catch(err => {
-            console.log(err)
-            this.onFail();
-          });
-    }
 }
 
 export default Login;

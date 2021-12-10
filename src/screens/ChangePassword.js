@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { DEVICE_WIDTH, MARGIN_VIEW, PADDING_CONTENT, TEXTSIZE } from "../constant/Constant";
-
+import {
+    responsiveWidth,
+    responsiveHeight,
+    responsiveFontSize,
+  } from "react-native-responsive-dimensions";
+import { LinearGradient } from "expo-linear-gradient";
 import global from "../global";
 import getToken from "../api/getToken";
 import changeInfoApi from "../api/changeInfoApi";
@@ -95,7 +100,21 @@ class ChangePassword extends Component {
                 <TouchableOpacity
                     onPress={this.onChangeProfile.bind(this)}
                 >
-                    <Text>Đồng ý</Text>
+                    <LinearGradient
+                    colors={["#884BCB", "#7A43CB", "#713ECD"]}
+                    style={styles.button}
+                    >
+                    <Text
+                        style={{
+                        color: "#fff",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        fontSize: responsiveFontSize(1.5),
+                        }}
+                    >
+                        ĐỒNG Ý
+                    </Text>
+                    </LinearGradient>
                 </TouchableOpacity>
             </View>
         );
@@ -109,7 +128,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
+        paddingTop: 20,
     },
     textInput: {
         color: "#000",
@@ -129,5 +149,15 @@ const styles = StyleSheet.create({
         marginLeft: MARGIN_VIEW,
         marginRight: MARGIN_VIEW,
         padding: PADDING_CONTENT
+    },
+    button: {
+        backgroundColor: "#743fcd",
+        borderRadius: 40,
+        width: responsiveWidth(35),
+        height: responsiveHeight(5),
+        paddingTop: 10,
+        marginTop: responsiveHeight(3),
+        marginLeft: responsiveWidth(2),
+        alignSelf: "center",
     },
 });

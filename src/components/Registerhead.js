@@ -7,8 +7,8 @@ import {
 
 export const Registerhead = () => (
   <View>
-    <Text style={styles.title}>Oh, you are there</Text>
-    <Text style={styles.subTitle}>Let join us</Text>
+    <Text style={styles.title}>Tạo tài khoản mới</Text>
+    <Text style={styles.subTitle}>Hãy gia nhập với chúng tôi</Text>
   </View>
 );
 
