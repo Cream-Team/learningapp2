@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import { theme } from "../core/theme";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -33,6 +33,69 @@ class Login extends Component {
     };
   }
 
+  componentDidMount() {
+    getToken()
+    .then(token => getUserLogged(token))
+    .then(res => this.redirectToMain(res))
+    .catch(err => console.log(err));
+}
+
+redirectToMain(res) {
+    if(res.email) {
+        global.onSignIn = res;
+        this.props.navigation.navigate("Home")
+    }
+}
+
+gotoMain() {
+    this.props.navigation.navigate("Home")
+}
+
+gotoRegister() {
+    this.props.navigation.navigate("Register")
+}
+
+onSuccess() {
+    Alert.alert(
+        'Thông báo',
+        'Đăng nhập thành công',
+        [
+            { text: 'OK' }
+        ],
+        { cancelable: false }
+    );
+  }
+
+onFail() {
+    Alert.alert('Thông báo', 'Đăng nhập thất bại', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        { text: 'OK'},
+    ]);
+}
+
+onSignIn() {
+  const { email, password } = this.state;
+  signIn(email, password)
+    .then(res => {
+      if(res.user) {
+        global.onSignIn = res.user;
+        saveToken(res.access_token);
+        this.onSuccess();
+        this.gotoMain();
+      } else {
+        console.log(res)
+        this.onFail();
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      this.onFail();
+    });
+  }
+
   render() {
     const { email, password } = this.state;
     return (
@@ -64,7 +127,7 @@ class Login extends Component {
 
         <View style={styles.footerContainer}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("Home")}
+            onPress={this.onSignIn.bind(this)}
           >
             <LinearGradient
               colors={["#884BCB", "#7A43CB", "#713ECD"]}
@@ -86,7 +149,7 @@ class Login extends Component {
           <View style={styles.row}>
             <Text>Don’t have an account? </Text>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Register")}
+              onPress={this.gotoRegister.bind(this)}
             >
               <Text style={styles.link}>Sign up</Text>
             </TouchableOpacity>

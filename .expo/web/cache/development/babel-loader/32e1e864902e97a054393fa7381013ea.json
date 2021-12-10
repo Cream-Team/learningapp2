@@ -1,1 +1,0 @@
-{"ast":null,"code":"module.exports = {\n  onSignIn: null\n};","map":{"version":3,"sources":["D:/Work_Learn/react-native/learningapp2/src/global.js"],"names":["module","exports","onSignIn"],"mappings":"AAAAA,MAAM,CAACC,OAAP,GAAiB;AACbC,EAAAA,QAAQ,EAAE;AADG,CAAjB","sourcesContent":["module.exports = {\r\n    onSignIn: null,\r\n};"]},"metadata":{},"sourceType":"script"}

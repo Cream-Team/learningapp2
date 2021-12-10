@@ -74,8 +74,6 @@ class Course extends Component {
                                         );
                                     })
                                 }
-                                
-                                
                             </DropDownItem>
                         );
                     }) }
@@ -126,20 +124,17 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     txtName: {
-        fontFamily: 'Avenir',
         color: '#fff',
         fontSize: 20,
         marginBottom: 20,
         marginTop: 20,
     },
     txtDel: {
-        fontFamily: 'Avenir',
         color: '#BCBCBC',
         fontSize: 20,
         fontWeight: '700',
     },
     txtTitle: {
-        fontFamily: 'Avenir',
         color: '#BCBCBC',
         fontSize: 25,
         fontWeight: '400',
