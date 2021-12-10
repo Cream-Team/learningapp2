@@ -1,5 +1,5 @@
 import SUPABASE_KEY from '../apikey'
-const submitExercise = (token, data) => (
+const submitExercise = (token, user_id, document_id, answer, is_correct) => (
     fetch('https://vikrybiztqeanihgvgkm.supabase.co/rest/v1/practices',
     {   
         method: 'POST',
@@ -9,7 +9,7 @@ const submitExercise = (token, data) => (
             'Content-Type': 'application/json',
             'Prefer': 'return=representation'
         },
-        body: JSON.stringify({ data })
+        body: JSON.stringify({ user_id, document_id, answer, is_correct })
     })
     .then(res => res.json())
 );
