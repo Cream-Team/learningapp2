@@ -57,7 +57,7 @@ class Lecture extends Component {
     componentDidMount() {
         const id = this.props.route.params;
         const user_id = global.onSignIn.id;
-
+        
         getToken()
         .then(token => initDataDetailLecture(token, user_id, id))
         .then(listData => this.setState({ listData }))
@@ -152,7 +152,8 @@ class Lecture extends Component {
             </ScrollView>
         );
         const PageBaiTap = ({e}) => {
-            let [checked, setChecked] = useState(parseInt(e.practices[e.practices.length - 1].answer));
+            const def = e.practices[e.practices.length - 1] ? parseInt(e.practices[e.practices.length - 1].answer) : 0;
+            let [checked, setChecked] = useState(def);
 
             return (
                 <ScrollView style={styles.container}>
