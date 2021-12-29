@@ -17,7 +17,7 @@ import { LogBox } from 'react-native';
 const Stack = createStackNavigator();
 
 export default function App() {
-  LogBox.ignoreLogs(['Warning: ...']);
+  LogBox.ignoreAllLogs();
   return (
     <NavigationContainer>
       <Stack.Navigator

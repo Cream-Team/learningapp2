@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import register from "../api/register";
 import saveToken from "../api/saveToken";
+import global from "../global";
 
 class Register extends Component {
     constructor(props) {
